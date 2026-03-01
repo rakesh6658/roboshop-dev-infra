@@ -4,7 +4,7 @@ resource "aws_instance" "mongodb" {
     tags = {
       Name ="${local.common_name}-mongodb"
     }
-    subnet_id = split(",",local.databasesubnet_id)
+    subnet_id = local.databasesubnet_id
   
     vpc_security_group_ids = [data.aws_ssm_parameter.sg_id.value]
     
