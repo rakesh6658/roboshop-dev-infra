@@ -6,7 +6,7 @@ resource "aws_instance" "mongodb" {
     }
     subnet_id = local.databasesubnet_id
   
-    vpc_security_group_ids = [data.aws_ssm_parameter.sg_id.value]
+    vpc_security_group_ids = [data.aws_ssm_parameter.mongodb_sg_id.value]
     
     
     
