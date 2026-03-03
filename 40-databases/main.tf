@@ -112,3 +112,41 @@ resource "terraform_data" "rabbitmq" {
      ]
   }
 }
+resource "aws_instance" "mysql" {
+    ami = local.ami_id
+    instance_type = "t3.micro"
+    tags = {
+      Name ="${local.common_name}-mysql"
+    }
+    subnet_id = local.databasesubnet_id
+  
+    vpc_security_group_ids = [data.aws_ssm_parameter.mysql_sg_id.value]
+    
+    
+    
+}
+resource "terraform_data" "mysql" {
+  triggers_replace = [
+    aws_instance.mysql.id
+   
+  ]
+  provisioner "file" {
+    source = "bootstrap.sh"
+    destination = "/tmp/bootstrap.sh"
+    
+  }
+  connection {
+      type = "ssh"
+      user = "ec2-user"
+      password = "DevOps321"
+      host = aws_instance.mysql.private_ip
+    }
+
+  provisioner "remote-exec" {
+    inline = [ 
+    "sudo chmod +x /tmp/bootstrap.sh",
+    "sudo sh /tmp/bootstrap.sh mysql"
+
+     ]
+  }
+}
