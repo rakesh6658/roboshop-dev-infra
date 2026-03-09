@@ -48,7 +48,7 @@ resource "aws_ami_from_instance" "catalogue" {
 resource "aws_lb_target_group" "catalogue" {
   name        = "${local.common_name}-catalogue"
   
-  port        = 8080
+  port = 8080
   protocol    = "HTTP"
   vpc_id      = local.vpc_id
   deregistration_delay = 60
