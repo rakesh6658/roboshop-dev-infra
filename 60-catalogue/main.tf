@@ -68,7 +68,7 @@ resource "aws_lb_target_group" "catalogue" {
 resource "aws_launch_template" "catalogue" {
   name = "${local.common_name}-catalogue"
 
-  
+  instance_initiated_shutdown_behavior = "terminate"
   
 
    image_id = local.ami_id
@@ -112,6 +112,7 @@ resource "aws_autoscaling_group" "catalogue" {
   health_check_grace_period = 100
   health_check_type         = "ELB"
   desired_capacity          = 1
+  force_delete = false
   
 
   launch_template {
@@ -135,6 +136,13 @@ target_group_arns = [aws_lb_target_group.catalogue.arn]
       propagate_at_launch = true
     }
   }
+   instance_refresh {
+    strategy = "Rolling"
+    preferences {
+      min_healthy_percentage = 50 # atleast 50% of the instances should be up and running
+    }
+    triggers = ["launch_template"]
+  }
 
   
   timeouts {
@@ -153,7 +161,7 @@ resource "aws_autoscaling_policy" "catalogue" {
       predefined_metric_type = "ASGAverageCPUUtilization"
     }
 
-    target_value = 70.0
+    target_value = 75.0
   }
 }
 resource "aws_lb_listener_rule" "catalogue_rule" {
