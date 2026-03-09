@@ -143,7 +143,7 @@ target_group_arns = [aws_lb_target_group.catalogue.arn]
 }
 resource "aws_autoscaling_policy" "catalogue" {
   name                   = "${local.common_name}-catalogue"
-  autoscaling_group_name = aws_autoscaling_group.catalogue.arn
+  autoscaling_group_name = aws_autoscaling_group.catalogue.name
   policy_type            = "TargetTrackingScaling"
 
   target_tracking_configuration {
