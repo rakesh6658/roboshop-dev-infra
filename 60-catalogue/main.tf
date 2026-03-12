@@ -71,7 +71,7 @@ resource "aws_launch_template" "catalogue" {
   instance_initiated_shutdown_behavior = "terminate"
   
 
-   image_id = local.ami_id
+   image_id = aws_ami_from_instance.catalogue.id
 
   
   instance_type = "t3.micro"
